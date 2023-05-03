@@ -1,18 +1,14 @@
 <template>
   <div>
-    <form>
         <label for="lastfmAccount">LastFM Account: </label><br>
-        <input type="text" id="lastfmAccount" name="lastfmAccount" @change="saveLastFMUsername($event)"><br>
+        <input type="text" id="lastfmAccount" name="lastfmAccount" v-model="lastfmUsername"><br>
         <label for="spotifyPlaylistLink">Spotify Playlist Link: </label><br>
-        <input type="text" id="spotifyPlaylistLink" name="spotifyPlaylistLink" @change="saveSpotifyPlaylistLink($event)"><br>
+        <input type="text" id="spotifyPlaylistLink" name="spotifyPlaylistLink" v-model="spotifyPlaylistLink"><br>
         <button v-on:click="track">Submit</button> <br />
-        <div
-          v-for="(song, index) in songDeletions" :key="index"
-        >
+        <div v-for="(song, index) in songDeletions" :key="index">
           <h1>Songs</h1>
           <p>{{ song }}</p>
         </div>
-    </form>
   </div>
 </template>
 
@@ -41,19 +37,11 @@
       resetSpotifyPlaylistLink() {
         this.spotifyPlaylistLink = "";
       },
-      saveLastFMUsername(event) {
-        this.lastfmUsername = event.target.value;
-      },      
-      saveSpotifyPlaylistLink(event) {
-        this.spotifyPlaylistLink = event.target.value;
-      },
       async track() {
-        let result = await LastFMService.makeSuggestions();
-        setTimeout(() => {
-          console.log(result);
-        }, 1000);
+        let result = await LastFMService.makeSuggestions(this.lastfmUsername, this.spotifyPlaylistLink);
         this.songDeletions = result[0];
         this.songAdditions = result[1];
+        
       }
       
     }
